@@ -1,0 +1,105 @@
+"""
+projekt_2.py: druhý projekt do Engeto Online Python Akademie
+
+author: Maxim Dotsenko 
+email: maximdocenko95@gmail.com
+discord: maximrtop
+"""
+
+import random
+
+def generate_secret_number():
+    """
+    Vytvoří náhodné 4-místné číslo, jehož číslice jsou unikátní a číslo nezačíná nulou.
+    """
+    # První číslice vybíráme z 1-9, aby číslo nezačínalo nulou
+    first_digit = random.choice(list("123456789"))
+    # Pro zbývající číslice volíme z 0-9, vyjma již použité první číslice
+    remaining_digits = list("0123456789")
+    remaining_digits.remove(first_digit)
+    # Vybereme náhodně 3 číslice z dostupných a spojíme s první číslicí
+    secret_digits = [first_digit] + random.sample(remaining_digits, 3)
+    return ''.join(secret_digits)
+
+def is_valid_guess(guess):
+    """
+    Kontroluje, zda zadaný tip:
+    - má přesně 4 znaky,
+    - obsahuje pouze číslice,
+    - nezačíná nulou,
+    - číslice jsou unikátní.
+    """
+    if len(guess) != 4:
+        print("Číslo musí mít přesně 4 číslice.")
+        return False
+    if not guess.isdigit():
+        print("Vstup musí obsahovat pouze číslice.")
+        return False
+    if guess[0] == '0':
+        print("Číslo nesmí začínat nulou.")
+        return False
+    if len(set(guess)) != 4:
+        print("Číslice se nesmí opakovat.")
+        return False
+    return True
+
+def get_bulls_and_cows(secret, guess):
+    """
+    Spočítá počet bull a cow.
+    - Bull: číslice na stejné pozici jako v tajném čísle.
+    - Cow: číslice se nachází v tajném čísle, ale na jiné pozici.
+    
+    Jelikož máme unikátní číslice, lze počet cow spočítat jako:
+    počet shodujících se číslic - počet bull.
+    """
+    bulls = sum(1 for i in range(4) if secret[i] == guess[i])
+    cows = sum(1 for digit in guess if digit in secret) - bulls
+    return bulls, cows
+
+def main():
+    # Úvodní text
+    print("Hi there!")
+    print("-----------------------------------------------")
+    print("I've generated a random 4 digit number for you.")
+    print("Let's play a bulls and cows game.")
+    print("-----------------------------------------------")
+    
+    secret = generate_secret_number()
+    # Pro ladění můžete odkomentovat následující řádek a zobrazit tajné číslo:
+    # print(f"(Tajné číslo je: {secret})")
+    
+    guess_count = 0
+    
+    # Hlavní herní smyčka
+    while True:
+        guess = input("Enter a number: ")
+        if not is_valid_guess(guess):
+            continue  # Pokud tip není validní, znovu se zeptáme
+        
+        guess_count += 1
+        bulls, cows = get_bulls_and_cows(secret, guess)
+        
+        if bulls == 4:
+            print(f"Correct, you've guessed the right number")
+            print(f"in {guess_count} guess{'es' if guess_count != 1 else ''}!")
+            break
+        else:
+            # Správná gramatika jednotného/množného čísla pro bulls/cows
+            bulls_str = "bull" if bulls == 1 else "bulls"
+            cows_str = "cow" if cows == 1 else "cows"
+            print(f"{bulls} {bulls_str}, {cows} {cows_str}")
+    
+    # Vyhodnocení výkonu na základě počtu pokusů
+    if guess_count == 1:
+        performance = "incredible"
+    elif guess_count <= 4:
+        performance = "amazing"
+    elif guess_count <= 6:
+        performance = "average"
+    else:
+        performance = "not so good"
+        
+    print(f"That's {performance}.")
+
+if __name__ == "__main__":
+    main()
