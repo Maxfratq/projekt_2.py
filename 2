@@ -12,12 +12,10 @@ def generate_secret_number():
     """
     Vytvoří náhodné 4-místné číslo, jehož číslice jsou unikátní a číslo nezačíná nulou.
     """
-    # První číslice vybíráme z 1-9, aby číslo nezačínalo nulou
-    first_digit = random.choice(list("123456789"))
-    # Pro zbývající číslice volíme z 0-9, vyjma již použité první číslice
+    
+    first_digit = random.choice(list("123456789")
     remaining_digits = list("0123456789")
     remaining_digits.remove(first_digit)
-    # Vybereme náhodně 3 číslice z dostupných a spojíme s první číslicí
     secret_digits = [first_digit] + random.sample(remaining_digits, 3)
     return ''.join(secret_digits)
 
@@ -57,7 +55,6 @@ def get_bulls_and_cows(secret, guess):
     return bulls, cows
 
 def main():
-    # Úvodní text
     print("Hi there!")
     print("-----------------------------------------------")
     print("I've generated a random 4 digit number for you.")
@@ -65,12 +62,9 @@ def main():
     print("-----------------------------------------------")
     
     secret = generate_secret_number()
-    # Pro ladění můžete odkomentovat následující řádek a zobrazit tajné číslo:
-    # print(f"(Tajné číslo je: {secret})")
     
     guess_count = 0
     
-    # Hlavní herní smyčka
     while True:
         guess = input("Enter a number: ")
         if not is_valid_guess(guess):
@@ -89,7 +83,6 @@ def main():
             cows_str = "cow" if cows == 1 else "cows"
             print(f"{bulls} {bulls_str}, {cows} {cows_str}")
     
-    # Vyhodnocení výkonu na základě počtu pokusů
     if guess_count == 1:
         performance = "incredible"
     elif guess_count <= 4:
